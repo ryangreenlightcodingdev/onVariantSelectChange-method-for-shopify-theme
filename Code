@@ -1,0 +1,103 @@
+main-product.liquid code:
+
+
+<script type="application/json" id="detailsJSON">
+                 {
+                  {% for variant in product.variants%}
+                  "{{variant.id}}":{{variant.metafields.jasper.product-weight | json}}{% unless forloop.last %},{% endunless%}
+                  {%endfor%}
+                 
+                 }
+                 </script>
+            <script type="application/json" id="detailsJSONMax">
+                    {
+                    {% for variant in product.variants%}
+                  "{{variant.id}}":{{variant.metafields.jasper.product-weight-max | json}}{% unless forloop.last %},{% endunless%}
+                  {%endfor%}
+                    }
+            </script>
+              <script type="application/json" id="detailsJSONPound">
+                    {
+                    {% for variant in product.variants%}
+                  "{{variant.id}}":{{variant.metafields.jasper.price-per-pound | json}}{% unless forloop.last %},{% endunless%}
+                  {%endfor%}
+                    }
+            </script>
+
+            <!--above are two scripts with valid json--->
+
+
+                 <script>
+                 
+                 var detailsJson = document.getElementById("detailsJSON");
+                 var detailsJsonMax = document.getElementById("detailsJSONMax");
+                 var detailsPound = document.getElementById("detailsJSONPound")
+                 if(detailsJson){
+                    document.variantDetails = JSON.parse(detailsJson.innerHTML)
+                 }
+                 if(detailsJsonMax){
+                  document.variantDetails2 = JSON.parse(detailsJsonMax.innerHTML)
+                 }
+                 if(detailsPound){
+                  document.variantDetails3 = JSON.parse(detailsPound.innerHTML)
+                 }
+                 
+                 </script>
+
+
+                  {% endunless %}
+                  {% capture 'meta_data_per_pound', index: forloop.index0 %}
+                  {% for variant in product.variants %}
+                  {{variant.id}}:{{ variant.metafields.jasper.price-per-pound | json }}{% unless forloop.last %},{% endunless %}
+                 
+                    {% endfor %}
+                    {% endcapture %}
+                    
+                    
+theme.js
+
+
+
+_.updateDetails(variant,$container);
+           
+2.)  Function starts on line 2658 and ends on line 2696
+///onvariantselectchange method
+    _.updateDetails = function(variant,container){
+      //getting the details json object and saving it as a variable
+      var detailsJsonRender = document.getElementById("detailsJSON");
+      //creating array json object out of the vairant details
+      var arr = [document.variantDetails];
+      var arr2 = [document.variantDetails2];
+      var arr3 = [ document.variantDetails3];
+     
+      //converting to arrays I can direct index into
+      var object1 = Object.values(arr[0]);
+      var object2 = Object.values(arr2[0]);
+      var object3 = Object.values(arr3[0]);
+     
+      //getting two product weight values
+      var firstProductWeightValue = document.querySelector(".variant_pricePerPound");
+      var secondProductWeightValue = document.querySelector(".span.variant_productWeightMax");
+
+      //toggle on variant options
+                  ///dynamic updating of data
+                    //using string interpolation with direct indexing
+        if(variant.option1 == "Medium"){
+          document.querySelector("span.descrip-2").innerText = `${object1[0]}lbs`;
+          document.querySelector("span.variant_productWeightMax").innerText = `${object2[0]}`;
+          document.querySelector("span.variant_pricePerPound").innerText = `${object3[0]}`;
+        } else if(variant.option1 == "Large"){
+          document.querySelector("span.descrip-2").innerText = `${object1[1]}lbs`
+          document.querySelector("span.variant_productWeightMax").innerText = `${object2[1]}`
+          document.querySelector("span.variant_pricePerPound").innerText = `${object3[1]}`
+
+        } else if(variant.option1 == "Roast"){
+          document.querySelector("span.descrip-2").innerText = `${object1[0]}lbs`;
+          document.querySelector("span.variant_productWeightMax").innerText = `${object2[0]}`;
+          document.querySelector("span.variant_pricePerPound").innerText = `${object3[0]}`;
+        } else if(variant.option1 == "Steak"){
+          document.querySelector("span.descrip-2").innerText = `${object1[1]}lbs`
+          document.querySelector("span.variant_productWeightMax").innerText = `${object2[1]}`
+          document.querySelector("span.variant_pricePerPound").innerText = `${object3[1]}`
+        }
+    };
