@@ -1,1 +1,1 @@
-This is a shopify metafields onVariantSelectChange method I wrote for a client's store. Feel free to incorporate this code into your own project
+This is a method for onVariantSelectChange in Shopify metafields that I developed for a client's store. This particular theme's main javascript file lacked this method.
